@@ -1,0 +1,17 @@
+# cli crate 的清單 ≈ 一個 .csproj（主控台應用程式）
+[package]
+name = "mahjong-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+# 引用我們自己的引擎 crate（路徑定義在根 Cargo.toml 的 workspace.dependencies）。
+# 這就是「專案參考」(ProjectReference)：CLI 依賴 engine。
+mahjong-engine = { workspace = true }
+
+# [[bin]] 定義一個可執行檔目標。name 是產出的 exe 名稱（mahjong.exe）。
+# 之後 `cargo run -p mahjong-cli` 就會跑這支。
+[[bin]]
+name = "mahjong"
+path = "src/main.rs"

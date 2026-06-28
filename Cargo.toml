@@ -1,0 +1,19 @@
+# Workspace 根清單 ≈ .NET 的 .sln
+# 它本身不是一個可編譯的 crate，只負責「把多個 crate 綁在一起管理」。
+[workspace]
+# resolver = "3" 是新版相依解析器（edition 2024 預設）。
+resolver = "3"
+# 成員 crate 的路徑，就像 .sln 裡列出的專案。
+members = ["crates/engine", "crates/cli"]
+
+# [workspace.package] 讓所有成員 crate「繼承」共用的中繼資料，
+# 避免每個 Cargo.toml 重複寫版本/edition。各 crate 用 `xxx.workspace = true` 套用。
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+# 集中管理相依版本（之後加套件如 rand 時寫在這，子 crate 引用即可），
+# 確保整個 workspace 用同一個版本，類似 .NET 的 Directory.Packages.props（中央套件管理）。
+[workspace.dependencies]
+mahjong-engine = { path = "crates/engine" }

@@ -1,0 +1,11 @@
+# Rust 編譯輸出（相當於 .NET 的 bin/ 與 obj/）。體積很大，絕不進版控。
+/target
+
+# JetBrains IDE（RustRover / CLion / IntelliJ）的個人設定資料夾
+/.idea
+
+# 備份檔
+**/*.rs.bk
+
+# 注意：Cargo.lock 我們「要」進版控（因為這個 workspace 會產生執行檔），
+# 所以這裡刻意不忽略它。純函式庫專案才會忽略 Cargo.lock。

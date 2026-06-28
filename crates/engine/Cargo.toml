@@ -1,0 +1,10 @@
+# engine crate 的清單 ≈ 一個 .csproj（類別庫）
+[package]
+name = "mahjong-engine"
+# .workspace = true 表示「繼承根 Cargo.toml 的 [workspace.package] 設定」
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# 目前還沒有外部相依。之後例如要洗牌會加 rand。
+[dependencies]
