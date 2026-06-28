@@ -55,6 +55,74 @@ pub enum Tile {
     Flower(Flower),
 }
 
+// 引入標準函式庫的 fmt 模組，才能寫 fmt::Display / fmt::Formatter / fmt::Result。
+use std::fmt;
+
+// `impl Trait for Type { ... }` 是「為某型別實作某 trait」≈ C# class : IInterface 後實作其方法。
+// Display 規定你要提供一個 fmt 方法，把自己寫進傳入的 formatter。
+impl fmt::Display for Tile {
+    // &self：唯讀借用自己（不奪走所有權）≈ C# 的 this（但這裡明確是借用）。
+    // f 是輸出緩衝；回傳 fmt::Result 表示寫入成功/失敗。
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // match self 拆解 enum；編譯器會強制窮舉每個 variant，漏一個就編不過。
+        match self {
+            Tile::Suited(suit, rank) => {
+                // 點數 → 國字。match 對 u8 必須窮舉，所以用 `_` 收尾接住 1~9 以外的值
+                //（呼應先前提到的「Suited 目前允許非法點數」破綻，這裡先給個保底）。
+                let n = match rank {
+                    1 => "一",
+                    2 => "二",
+                    3 => "三",
+                    4 => "四",
+                    5 => "五",
+                    6 => "六",
+                    7 => "七",
+                    8 => "八",
+                    9 => "九",
+                    _ => "?",
+                };
+                let s = match suit {
+                    Suit::Characters => "萬",
+                    Suit::Dots => "筒",
+                    Suit::Bamboo => "索",
+                };
+                // write! 把格式化結果寫進 f；`{n}{s}` 是把變數直接內嵌進字串（Rust 2021+ 語法）。
+                write!(f, "{n}{s}")
+            }
+            Tile::Wind(wind) => {
+                let s = match wind {
+                    Wind::East => "東",
+                    Wind::South => "南",
+                    Wind::West => "西",
+                    Wind::North => "北",
+                };
+                write!(f, "{s}")
+            }
+            Tile::Dragon(dragon) => {
+                let s = match dragon {
+                    Dragon::Red => "中",
+                    Dragon::Green => "發",
+                    Dragon::White => "白",
+                };
+                write!(f, "{s}")
+            }
+            Tile::Flower(flower) => {
+                let s = match flower {
+                    Flower::Spring => "春",
+                    Flower::Summer => "夏",
+                    Flower::Autumn => "秋",
+                    Flower::Winter => "冬",
+                    Flower::Plum => "梅",
+                    Flower::Orchid => "蘭",
+                    Flower::Bamboo => "竹",
+                    Flower::Chrysanthemum => "菊",
+                };
+                write!(f, "{s}")
+            }
+        }
+    }
+}
+
 /// 發一副完整的台灣麻將牌（未洗牌）：數牌 108 + 字牌 28 + 花牌 8 = 144 張。
 ///
 /// 回傳 `Vec<Tile>`：Vec 是「可成長的陣列」≈ C# 的 `List<T>`，資料配置在 heap 上。
@@ -152,5 +220,18 @@ mod tests {
         let 花牌數量 = wall.iter().filter(|t| matches!(t, Tile::Flower(_))).count();
 
         assert_eq!(花牌數量, 8);
+    }
+
+    #[test]
+    fn 牌可印成人類可讀字串() {
+        // format!("{}", x) 會用到 Display；下面每一行都驗證一種 variant 的呈現。
+        assert_eq!(format!("{}", Tile::Suited(Suit::Characters, 1)), "一萬");
+        assert_eq!(format!("{}", Tile::Suited(Suit::Dots, 5)), "五筒");
+        assert_eq!(format!("{}", Tile::Suited(Suit::Bamboo, 9)), "九索");
+        assert_eq!(format!("{}", Tile::Wind(Wind::East)), "東");
+        assert_eq!(format!("{}", Tile::Dragon(Dragon::Red)), "中");
+        assert_eq!(format!("{}", Tile::Dragon(Dragon::White)), "白");
+        assert_eq!(format!("{}", Tile::Flower(Flower::Spring)), "春");
+        assert_eq!(format!("{}", Tile::Flower(Flower::Chrysanthemum)), "菊");
     }
 }
