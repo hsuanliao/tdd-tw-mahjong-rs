@@ -61,7 +61,7 @@ Rust 沒有「官方」Clean Architecture 框架，但業界最通行的對應�
 ## Roadmap（5 階段）
 
 - [x] 階段 0：環境與專案骨架
-- [ ] 階段 1：牌的模型（enum/struct/derive/Vec/ownership）
+- [x] 階段 1：牌的模型（enum/derive/Vec/ownership/迭代器/手動 impl Display）
 - [ ] 階段 2：手牌與胡牌判斷（match/遞迴/Option/借用）
 - [ ] 階段 3：遊戲流程引擎（enum 狀態機/Result/錯誤處理）
 - [ ] 階段 4：台數計算與 CLI 對戰（trait/迭代器/closure）
